@@ -30,6 +30,8 @@ from fastapi.responses import JSONResponse
 from app.core.exceptions import SparkleException
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.instrumentation.redis import RedisInstrumentor
 import sys
 
 # Configure Loguru
@@ -154,6 +156,7 @@ app.add_middleware(IdempotencyMiddleware, store=idempotency_store)
 @app.on_event("startup")
 async def startup_event():
     """Startup event to instrument and expose metrics"""
+    # prometheus_fastapi_instrumentator 已经提供了基本的 metrics 暴露
     Instrumentator().instrument(app).expose(app)
 
 
